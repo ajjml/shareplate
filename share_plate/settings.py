@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hei1jq724env34g(tstl8*fda3q+lad5#e@1lzceks3^g8v#g4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [https://shareplate-l6jb.onrender.com]
 
 
 # Application definition
