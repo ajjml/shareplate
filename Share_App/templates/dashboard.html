@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 13px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    header nav a {
+      color: rgb(72, 121, 64);
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    .main-wrapper {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 80px); /* subtract header */
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: rgba(0, 0, 0, 0.88);
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 30px;
+      font-weight: 600;
+      border-bottom: 2px solid #27ae60;
+      padding-bottom: 10px;
+    }
+
+    .sidebar-btn {
+      display: block;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      text-align: center;
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-btn:hover {
+      background: linear-gradient(135deg, #219150, #27ae60);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    }
+
+    .content {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    .card-custom {
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .card-custom:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    h3 {
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <img src="/media/logo.png" alt="SharePlate Logo">
+  </div>
+  <nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'logout' %}" class="btn btn-danger ms-3" style="padding:6px 15px;border-radius:6px;">Logout</a>
+  </nav>
+</header>
+
+<!-- ✅ Logout Confirmation Alert -->
+{% if request.GET.logout %}
+  <div class="container mt-3">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      ✅ You have been logged out successfully.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+{% endif %}
+
+<div class="main-wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <a href="{% url 'food_details' %}" class="sidebar-btn">Food Details</a>
+    <a href="{% url 'location_details' %}" class="sidebar-btn">Location Details</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content container-fluid">
+    <div class="row">
+      <!-- Left: Dashboard Actions -->
+      <div class="col-lg-12 mb-4">
+        <div class="text-center mb-5">
+          <h1>Welcome to Your Dashboard</h1>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-6 mb-4">
+            <div class="card card-custom shadow text-center p-4">
+              <h3>Share Food</h3>
+              <p>Donate your extra food and turn a simple meal into hope and happiness for someone in need.</p>
+              <a href="{% url 'share_food' %}" class="btn btn-success">Share Food</a>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="card card-custom shadow text-center p-4">
+              <h3>Share Location</h3>
+              <p>Share the location of those in need and help deliver hope, food, and care to hearts that need it most.</p>
+              <a href="{% url 'share_location' %}" class="btn btn-success">Share Location</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 SharePlate. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Food</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+    #map {
+      height: 300px;
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .btn {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #27ae60;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #219150;
+    }
+    .locate-btn {
+      margin-top: 10px;
+      background: #2980b9;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🍲 Share Food</h2>
+    <form method="POST" action="{% url 'share_food' %}">
+      {% csrf_token %}
+
+      <label for="food_name">Food Name:</label>
+      <input type="text" name="food_name" id="food_name" required>
+
+      <label for="quantity">Quantity:</label>
+      <input type="text" name="quantity" id="quantity" required>
+
+      <label for="expiry_date">Expiry Date:</label>
+      <input type="date" name="expiry_date" id="expiry_date" required>
+
+      <label for="submission_date">Submission Date:</label>
+      <input type="date" name="submission_date" id="submission_date" readonly>
+
+      <label for="status">Status:</label>
+      <select name="status" id="status">
+        <option value="Pending">Pending</option>
+        <option value="Delivered">Delivered</option>
+      </select>
+
+      <!-- Hidden inputs for location -->
+      <input type="hidden" name="latitude" id="latitude">
+      <input type="hidden" name="longitude" id="longitude">
+
+      <label>Select Location (Optional):</label>
+      <div id="map"></div>
+      <button type="button" class="btn locate-btn" onclick="findLocation()">📍 Use Current Location</button>
+
+      <button type="submit" class="btn">✅ Submit Food</button>
+    </form>
+
+    <p style="text-align:center;margin-top:10px;">
+      <a href="{% url 'dashboard' %}">⬅ Back to Dashboard</a>
+    </p>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <script>
+    // Init map
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // India
+
+    // Tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // Map click
+    map.on('click', function(e) {
+      var latlng = e.latlng;
+      if (marker) map.removeLayer(marker);
+      marker = L.marker(latlng).addTo(map).bindPopup("Selected").openPopup();
+
+      document.getElementById('latitude').value = latlng.lat;
+      document.getElementById('longitude').value = latlng.lng;
+    });
+
+    // Current location
+    function findLocation() {
+      map.locate({ setView: true, maxZoom: 16 });
+    }
+
+    map.on('locationfound', function(e) {
+      var latlng = e.latlng;
+      if (marker) map.removeLayer(marker);
+      marker = L.marker(latlng).addTo(map).bindPopup("You are here").openPopup();
+
+      document.getElementById('latitude').value = latlng.lat;
+      document.getElementById('longitude').value = latlng.lng;
+    });
+
+    map.on('locationerror', function(e) {
+      alert(e.message);
+    });
+
+    // Add search control on map
+    L.Control.geocoder({
+      defaultMarkGeocode: false
+    })
+    .on('markgeocode', function(e) {
+      var latlng = e.geocode.center;
+      map.setView(latlng, 13);
+
+      if (marker) map.removeLayer(marker);
+      marker = L.marker(latlng).addTo(map).bindPopup(e.geocode.name).openPopup();
+
+      document.getElementById('latitude').value = latlng.lat;
+      document.getElementById('longitude').value = latlng.lng;
+    })
+    .addTo(map);
+
+    // Auto-fill submission date
+    document.addEventListener("DOMContentLoaded", function() {
+      var today = new Date().toISOString().split('T')[0];
+      document.getElementById("submission_date").value = today;
+    });
+  </script>
+</body>
+</html>
