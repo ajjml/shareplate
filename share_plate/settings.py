@@ -76,6 +76,7 @@ DATABASES = {
             'ssl': {'ca': BASE_DIR / 'certs/ca.pem'},
         },
     }
+}
 
 # ========================
 # Password validation
