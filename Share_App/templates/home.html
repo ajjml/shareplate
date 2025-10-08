@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SharePlate - Home</title>
+  {% load static %}
   <style>
     * {
       margin: 0;
@@ -20,7 +21,7 @@
 
     /* Navbar */
     header {
-      background: #def5d7; /* solid white background */
+      background: #def5d7; /* solid background */
       padding: 15px 40px;
       display: flex;
       align-items: center;
@@ -130,7 +131,7 @@
   <!-- Navbar -->
   <header>
     <div>
-      <img src="/media/logo.png" alt="SharePlate Logo">
+      <img src="{% static 'images/logo.png' %}" alt="SharePlate Logo">
     </div>
     <nav>
       <a href="{% url 'about' %}">About</a>
