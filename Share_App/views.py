@@ -18,6 +18,7 @@ def contact_page(request):
 
 # ------------------ Auth ------------------
 def login_view(request):
+    context = {"error": None}  # always pass error
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -26,8 +27,10 @@ def login_view(request):
             login(request, user)
             return redirect("dashboard")
         else:
-            return render(request, "login.html", {"error": "Invalid username or password"})
-    return render(request, "login.html")
+            context["error"] = "Invalid username or password"
+    
+    return render(request, "login.html", context)
+
 
 def logout_view(request):
     logout(request)
