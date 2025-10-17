@@ -57,8 +57,7 @@
               Quantity: {{ food.quantity }}<br>
               <small class="text-gray-500">
                 Donor: {{ food.donor.username }}
-                {# Safely show phone number if profile exists #}
-                {% if food.donor.profile|default_if_none:"" %}
+                {% if food.donor.profile %}
                   {% if food.donor.profile.phone_number %}
                     | 📞 {{ food.donor.profile.phone_number }}
                   {% endif %}
