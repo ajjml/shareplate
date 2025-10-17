@@ -57,11 +57,7 @@
               Quantity: {{ food.quantity }}<br>
               <small class="text-gray-500">
                 Donor: {{ food.donor.username }}
-                {% if food.donor.profile %}
-                  {% if food.donor.profile.phone_number %}
-                    | 📞 {{ food.donor.profile.phone_number }}
-                  {% endif %}
-                {% endif %}
+                {% if food.phone_number %} | 📞 {{ food.phone_number }} {% endif %}
               </small><br>
               {% if food.latitude and food.longitude %}
                 <a href="https://www.google.com/maps?q={{ food.latitude }},{{ food.longitude }}" target="_blank" class="text-green-500 font-semibold hover:underline mt-2 inline-block">
