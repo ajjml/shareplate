@@ -62,21 +62,16 @@ def register_view(request):
 
 # ------------------ Dashboard ------------------
 @login_required
+
 def dashboard(request):
     food_items = FoodDonation.objects.filter(status="Pending").order_by("-created_at")
     needy_locations = NeedyLocation.objects.all().order_by("-created_at")
-
-    # Safely attach phone number to each food item
-    for food in food_items:
-        try:
-            food.phone_number = food.donor.profile.phone_number
-        except AttributeError:
-            food.phone_number = None
 
     return render(request, "dashboard.html", {
         "food_items": food_items,
         "needy_locations": needy_locations,
     })
+
 # ------------------ Food Donation ------------------
 @login_required
 def share_food_view(request):
